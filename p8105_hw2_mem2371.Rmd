@@ -1,6 +1,6 @@
 ---
 title: "Homework 2"
-author: "Megan Marziali"
+author: Megan Marziali
 output: github_document
 ---
 
@@ -8,6 +8,7 @@ This document contains my solutions to homework 2 for p8105.
 
 ```{r setup}
 library(tidyverse)
+library(readxl)
 ```
 
 # Problem 1
@@ -18,10 +19,10 @@ The following code imports the Mr. Trash Wheel data and cleans the data.
 
 ```{r}
 trash_wheel = 
-  readxl::read_excel("./problem_1/trash_wheel_collection.xlsx", 
-                     sheet = "Mr. Trash Wheel",
-                     range = "A2:N408",
-                     na = "") %>% 
+  read_xlsx("./problem_1/trash_wheel_collection.xlsx", 
+              sheet = "Mr. Trash Wheel",
+              range = "A2:N408",
+              na = "") %>% 
   janitor::clean_names() %>% 
   drop_na(dumpster) %>% 
   mutate(sports_balls_int = 
@@ -39,35 +40,39 @@ precip_2017 =
                      sheet = "2017 Precipitation",
                      range = "A2:B14"
                      ) %>% 
-  mutate(year = "2017")
+  janitor::clean_names() %>% 
+  mutate(year = "2017") %>% 
+  drop_na(month) %>% 
+  relocate(year)
 
 precip_2018 = 
   readxl::read_excel("./problem_1/trash_wheel_collection.xlsx",
                      sheet = "2018 Precipitation",
                      range = "A2:B14"
                      ) %>% 
-  mutate(year = "2018")
-
-sum(precip_2018$Total)
-median(precip_2018$total)
-round(median(precip_2018$Total), 2)
-IQR(precip_2018$Total)
-sd(precip_2018$Total)
+  janitor::clean_names() %>% 
+  mutate(year = "2018") %>% 
+  drop_na(month) %>% 
+  relocate(year)
 ```
 
 Joining data and converting month to a character variable.
 
 ```{r}
-precip_tidy = 
-  bind_rows(precip_2018, precip_2017) %>% 
-  janitor::clean_names() %>% 
-  mutate(month_name = month.name[month]
-         ) 
+month_df = 
+  tibble(
+    month = 1:12,
+    month_name = month.name)
+
+precip_df = 
+   bind_rows(precip_2018, precip_2017)
+
+left_join(precip_df, month_df, by = "month")
 ```
 
-Within the Mr. Trash Wheel dataset, there are `r nrow(trash_wheel)` observations. 
+This dataset contains information from the Mr. Trash Wheel trash collector in Balitmore, Maryland. As trash enters the inner harbour, the trash wheel collects that trash and stores it in a dumpster. The dataset contains information on year, month and trash collected, including some specific types of trash. There are a total of `r nrow(trash_wheel)` observations in our final dataset. Additional information is included on precipitation data.
 
-Within the precipitation dataset, there are `r nrow(precip_2017)` observations from 2017 and `r nrow(precip_2018)` from 2018. The total amount of precipitation in 2017 amounted to `r sum(precip_2017$Total)` inches, and `r sum(precip_2018$Total)` inches in 2018. The mean and median for precipitation in 2017 was `r round(mean(precip_2017$Total), 2)` (SD: `r round(sd(precip_2017$Total), 2)`) and `r round(median(precip_2017$Total), 2)` (IQR: `r round(IQR(precip_2017$Total), 2)`), respectively; with 2018, the mean precipitation was `r round(mean(precip_2018$Total), 2)` (SD: `r round(sd(precip_2018$Total), 2)`) and median precipitation was `r round(median(precip_2017$Total), 2)` (IQR: `r round(IQR(precip_2017$Total), 2)`).
+Within the precipitation dataset, there are `r nrow(precip_2017)` observations from 2017 and `r nrow(precip_2018)` from 2018. The total amount of precipitation in 2017 amounted to `r sum(precip_2017$total)` inches, and `r sum(precip_2018$total)` inches in 2018. The mean and median for precipitation in 2017 was `r round(mean(precip_2017$total), 2)` (SD: `r round(sd(precip_2017$total), 2)`) and `r round(median(precip_2017$total), 2)` (IQR: `r round(IQR(precip_2017$total), 2)`), respectively; with 2018, the mean precipitation was `r round(mean(precip_2018$total), 2)` (SD: `r round(sd(precip_2018$total), 2)`) and median precipitation was `r round(median(precip_2017$total), 2)` (IQR: `r round(IQR(precip_2017$total), 2)`).
 
 # Problem 2
 
