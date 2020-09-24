@@ -76,7 +76,11 @@ Within the precipitation dataset, there are `r nrow(precip_2017)` observations f
 
 # Problem 2
 
-```{r}
+## Reading in transit data
+
+The following code chunk reads in the NYC transit subway data and cleans it up.
+
+```{r read in data}
 transit_df = 
   read_csv("./problem_2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
            na = "") %>% 
@@ -102,17 +106,26 @@ transit_df =
          route11 = as.character(route11))
 ```
 
-The NYC transit dataset contains information regarding lines, station names and locations (specifically, latitude and longitude), routes, entry and entrance types, vending and ADA compliance. To clean the dataset thus far, I have dropped unnecessary variables, cleaned the column names, and recoded the entry variable to logical vector. I have also indicated that blank cells in the excel sheet correspond to missing values. This dataset has `r nrow(transit_df)` rows and `r ncol(transit_df)` columns. The dataset is not tidy, because the route names should be transformed to rows in lieu of columns.
+The NYC transit subway dataset contains information regarding lines, station names and locations (specifically, latitude and longitude), routes, entry,  entrance types, vending and ADA compliance. To clean the dataset, I have dropped unnecessary variables, cleaned the column names, cleaned variable types to be consistent, and recoded the entry variable to logical vector. I have also indicated that blank cells in the excel sheet correspond to missing values. This dataset has `r nrow(transit_df)` rows and `r ncol(transit_df)` columns. The dataset is not tidy, because the route names should be transformed to rows in lieu of columns.
+
+## Specifics about the transit data
+
+There are `r nrow(distinct(transit_df))` distinct stations included in this dataset. There are `r sum(transit_df$ada == "TRUE", na.rm = FALSE)` stations that are ADA compliant.
 
 The following code chunk restricts to only stations without vending.
-```{r}
+
+```{r no vending}
 transit_no_vend = 
   filter(transit_df, vending == "NO")
 ```
 
-There are `r nrow(distinct(transit_df))` stations included. There are `r sum(transit_df$ada == "TRUE", na.rm = FALSE)` stations that are ADA compliant. There are `r sum(transit_no_vend$entry == "YES")` stations without vending that allow entry.
+There are `r sum(transit_no_vend$entry == "YES")` stations without vending that allow entry, which is 0% of the stations.
 
-```{r}
+## Reformatting the transit data
+
+The code chunk below is built to reformat the data to be distinct route names and route numbers.
+
+```{r long}
 transit_df_long = 
   pivot_longer(
     transit_df,
@@ -128,3 +141,7 @@ transit_a =
 ```
 
 There are `r nrow(transit_a)` stations that serve the A train. There are `r sum(transit_a$ada == "TRUE")` stations that are ADA compliant that serve the A train.
+
+# Problem 3
+
+
