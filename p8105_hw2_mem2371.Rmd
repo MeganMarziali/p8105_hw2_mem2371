@@ -19,16 +19,19 @@ The following code imports the Mr. Trash Wheel data and cleans the data.
 
 ```{r}
 trash_wheel = 
-  read_xlsx("./problem_1/trash_wheel_collection.xlsx", 
-              sheet = "Mr. Trash Wheel",
-              range = "A2:N408",
-              na = "") %>% 
+  read_xlsx("./problem_1/Trash-Wheel-Collection-Totals-8-6-19.xlsx")
+```
+
+trash_wheel = 
+  read_xlsx("./problem_1/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+            sheet = "Mr. Trash Wheel",
+            range = "A2:N408",
+            na = "") %>% 
   janitor::clean_names() %>% 
   drop_na(dumpster) %>% 
   mutate(sports_balls_int = 
            (round(sports_balls) %>% 
            as.integer()))
-```
 
 ## Read and clean precipiation data
 
