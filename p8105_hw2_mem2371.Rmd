@@ -48,9 +48,30 @@ precip_2018 =
                      ) %>% 
   mutate(year = "2018")
 
+sum(precip_2018$Total)
+median(precip_2018$total)
+round(median(precip_2018$Total), 2)
+IQR(precip_2018$Total)
+sd(precip_2018$Total)
+```
+
+Joining data and converting month to a character variable.
+
+```{r}
 precip_tidy = 
   bind_rows(precip_2018, precip_2017) %>% 
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  mutate(month_name = month.name[month]
+         ) 
 ```
+
+Within the Mr. Trash Wheel dataset, there are `r nrow(trash_wheel)` observations. 
+
+Within the precipitation dataset, there are `r nrow(precip_2017)` observations from 2017 and `r nrow(precip_2018)` from 2018. The total amount of precipitation in 2017 amounted to `r sum(precip_2017$Total)` inches, and `r sum(precip_2018$Total)` inches in 2018. The mean and median for precipitation in 2017 was `r round(mean(precip_2017$Total), 2)` (SD: `r round(sd(precip_2017$Total), 2)`) and `r round(median(precip_2017$Total), 2)` (IQR: `r round(IQR(precip_2017$Total), 2)`), respectively; with 2018, the mean precipitation was `r round(mean(precip_2018$Total), 2)` (SD: `r round(sd(precip_2018$Total), 2)`) and median precipitation was `r round(median(precip_2017$Total), 2)` (IQR: `r round(IQR(precip_2017$Total), 2)`).
+
+# Problem 2
+
+
+
 
 
