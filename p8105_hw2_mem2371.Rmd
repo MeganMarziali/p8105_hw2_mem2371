@@ -19,10 +19,6 @@ The following code imports the Mr. Trash Wheel data and cleans the data.
 
 ```{r}
 trash_wheel = 
-  read_xlsx("./problem_1/Trash-Wheel-Collection-Totals-8-6-19.xlsx")
-```
-
-trash_wheel = 
   read_xlsx("./problem_1/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
             sheet = "Mr. Trash Wheel",
             range = "A2:N408",
@@ -32,6 +28,7 @@ trash_wheel =
   mutate(sports_balls_int = 
            (round(sports_balls) %>% 
            as.integer()))
+```
 
 ## Read and clean precipiation data
 
@@ -39,7 +36,7 @@ The code below reads in and cleans precipitation data.
 
 ```{r}
 precip_2017 = 
-  readxl::read_excel("./problem_1/trash_wheel_collection.xlsx",
+  readxl::read_excel("./problem_1/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                      sheet = "2017 Precipitation",
                      range = "A2:B14"
                      ) %>% 
@@ -49,7 +46,7 @@ precip_2017 =
   relocate(year)
 
 precip_2018 = 
-  readxl::read_excel("./problem_1/trash_wheel_collection.xlsx",
+  readxl::read_excel("./problem_1/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                      sheet = "2018 Precipitation",
                      range = "A2:B14"
                      ) %>% 
