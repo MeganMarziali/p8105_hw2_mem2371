@@ -1,0 +1,23 @@
+---
+title: "Homework 2"
+author: "Megan Marziali"
+output: github_document
+---
+
+This document contains my solutions to homework 2 for p8105.
+
+```{r setup}
+library(tidyverse)
+```
+
+# Problem 1
+
+## Read and Clean Mr. Trash Wheel
+
+The following code imports the Mr. Trash Wheel data and cleans the data.
+
+```{r}
+trash_wheel = 
+  readxl::read_excel("./problem_1/trash_wheel_collection.xlsx", sheet = "Mr. Trash Wheel")
+```
+
