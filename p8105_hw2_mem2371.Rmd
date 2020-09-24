@@ -144,4 +144,24 @@ There are `r nrow(transit_a)` stations that serve the A train. There are `r sum(
 
 # Problem 3
 
+## Reading in the FiveThirtyEight data
+
+The following code reads in the pols-month data.
+
+```{r}
+pols_month = 
+  read_csv("./problem_3/fivethirtyeight_datasets/pols-month.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
