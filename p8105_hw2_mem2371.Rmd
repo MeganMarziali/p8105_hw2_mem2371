@@ -12,12 +12,20 @@ library(tidyverse)
 
 # Problem 1
 
-## Read and Clean Mr. Trash Wheel
+## Read and clean Mr. Trash Wheel
 
 The following code imports the Mr. Trash Wheel data and cleans the data.
 
 ```{r}
 trash_wheel = 
-  readxl::read_excel("./problem_1/trash_wheel_collection.xlsx", sheet = "Mr. Trash Wheel")
+  readxl::read_excel("./problem_1/trash_wheel_collection.xlsx", 
+                     sheet = "Mr. Trash Wheel",
+                     range = "A2:N408",
+                     na = "") %>% 
+  janitor::clean_names() %>% 
+  drop_na(dumpster) %>% 
+  mutate(sports_balls_int = 
+           (round(sports_balls) %>% 
+           as.integer()))
 ```
 
