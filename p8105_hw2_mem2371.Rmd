@@ -39,15 +39,17 @@ precip_2017 =
                      sheet = "2017 Precipitation",
                      range = "A2:B14"
                      ) %>% 
-  mutate(year = "2017") %>% 
-  janitor::clean_names()
+  mutate(year = "2017")
 
 precip_2018 = 
   readxl::read_excel("./problem_1/trash_wheel_collection.xlsx",
                      sheet = "2018 Precipitation",
                      range = "A2:B14"
                      ) %>% 
-  mutate(year = "2018") %>% 
+  mutate(year = "2018")
+
+precip_tidy = 
+  bind_rows(precip_2018, precip_2017) %>% 
   janitor::clean_names()
 ```
 
