@@ -96,12 +96,17 @@ transit_df =
          -entrance_location) %>% 
   mutate(entry = (recode(entry, YES = "TRUE",
                                 NO = "FALSE")))
-
-
-
 ```
 
 
 The NYC transit dataset contains information regarding lines, station names and locations (specifically, latitude and longitude), routes, entry and entrance types, vending and ADA compliance. To clean the dataset thus far, I have dropped unnecessary variables, cleaned the column names, and recoded the entry variable to logical vector. I have also indicated that blank cells in the excel sheet correspond to missing values. This dataset has `r nrow(transit_df)` rows and `r ncol(transit_df)` columns. The dataset is tidy.
 
-There are `r nrow(distinct(transit_df))` stations included. There are `r sum(transit_df$ada == "TRUE", na.rm = FALSE)` stations that are ADA compliant. 
+The following code chunk restricts to only stations without vending.
+```{r}
+transit_no_vend = 
+  filter(transit_df, vending == "NO")
+```
+
+There are `r nrow(distinct(transit_df))` stations included. There are `r sum(transit_df$ada == "TRUE", na.rm = FALSE)` stations that are ADA compliant. There are `r sum(transit_no_vend$entry == "YES")` stations without vending that allow entry.
+
+
