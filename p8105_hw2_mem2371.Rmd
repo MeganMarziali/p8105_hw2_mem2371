@@ -6,7 +6,7 @@ output: github_document
 
 This document contains my solutions to homework 2 for p8105.
 
-```{r setup}
+```{r setup, message=FALSE}
 library(tidyverse)
 library(readxl)
 ```
@@ -58,7 +58,7 @@ precip_2018 =
 
 Joining data and converting month to a character variable.
 
-```{r}
+```{r, message=FALSE, results="hide"}
 month_df = 
   tibble(
     month = 1:12,
@@ -80,7 +80,7 @@ Within the precipitation dataset, there are `r nrow(precip_2017)` observations f
 
 The following code chunk reads in the NYC transit subway data and cleans it up.
 
-```{r read in data}
+```{r read in data, message=FALSE}
 transit_df = 
   read_csv("./problem_2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
            na = "") %>% 
@@ -148,9 +148,23 @@ There are `r nrow(transit_a)` stations that serve the A train. There are `r sum(
 
 The following code reads in the pols-month data.
 
-```{r}
+```{r, message = FALSE}
 pols_month = 
-  read_csv("./problem_3/fivethirtyeight_datasets/pols-month.csv")
+  read_csv("./problem_3/fivethirtyeight_datasets/pols-month.csv") %>% 
+  separate(
+    mon,
+    sep = "-",
+    into = c("year", "month", "day")) %>% 
+  mutate(president = 
+           ifelse(prez_dem == 1, 
+                  {president = "dem"}, 
+                  {president = "gop"}))
+
+pols_cleaned = 
+  select(pols_month,
+         -prez_gop, 
+         -prez_dem, 
+         -day)
 ```
 
 
