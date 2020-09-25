@@ -146,7 +146,7 @@ There are `r nrow(transit_a)` stations that serve the A train. There are `r sum(
 
 ## Reading in the FiveThirtyEight data
 
-The following code reads in the pols-month data.
+The following code reads in and cleans the pols-month data.
 
 ```{r, message = FALSE}
 pols_month = 
@@ -167,7 +167,23 @@ pols_cleaned =
          -day)
 ```
 
+This code chunk reads in and cleans the snp dataset.
 
+```{r, message=FALSE}
+snp_df = 
+  read_csv("./problem_3/fivethirtyeight_datasets/snp.csv") %>% 
+  separate(
+    date,
+    sep = "/",
+    into = c("month", "day", "year")) %>% 
+  relocate(year, month)
+```
+
+This code chunk reads in and cleans the unemployment dataset.
+
+```{r}
+
+```
 
 
 
