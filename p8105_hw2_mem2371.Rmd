@@ -155,14 +155,16 @@ pols_month =
     mon,
     sep = "-",
     into = c("year", "month", "day")) %>% 
-  mutate(president = 
+  mutate(year = as.integer(year),
+         month = as.integer(month),
+         president = 
            ifelse(prez_dem == 1, 
                   {president = "dem"}, 
                   {president = "gop"}))
 
 pols_cleaned = 
-  select(pols_month,
-         -prez_gop, 
+  left_join(pols_month, month_df, by = "month") %>% 
+  select(-prez_gop, 
          -prez_dem, 
          -day)
 ```
@@ -176,7 +178,13 @@ snp_df =
     date,
     sep = "/",
     into = c("month", "day", "year")) %>% 
+  mutate(year = as.integer(year),
+         month = as.integer(month),
+         day = as.integer(day)) %>% 
   relocate(year, month)
+
+snp_month = 
+  left_join(snp_df, month_df, by = "month") 
 ```
 
 This code chunk reads in and cleans the unemployment dataset.
@@ -187,15 +195,11 @@ unemployment_df =
   pivot_longer(
     Jan:Dec,
     names_to = "month_name",
-    values_to = "unemployment"
-  ) %>% 
+    values_to = "unemployment") %>% 
   mutate(
-    month = as.character(
-      match(month_name, month.abb)),
-    year = as.character(Year)
-  ) %>% 
-  select(-month_name,
-         -Year) %>% 
+    month = match(month_name, month.abb),
+    year = as.integer(Year)) %>% 
+  select(-Year) %>% 
   relocate(year, month)
 ```
 
@@ -205,10 +209,10 @@ The following code merges snp into pols, and merging the result with unemploymen
 
 ```{r}
 pols_snp_merge = 
-  left_join(pols_cleaned, snp_df, by = c("year", "month"))
+  left_join(pols_cleaned, snp_month, by = c("year", "month", "month_name"))
 
 full_merge = 
-  left_join(pols_snp_merge, unemployment_df, by = c("year", "month"))
+  left_join(pols_snp_merge, unemployment_df, by = c("year", "month", "month_name"))
 ```
 
 ## Dataset descriptions
