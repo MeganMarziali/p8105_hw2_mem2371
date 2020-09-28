@@ -119,7 +119,7 @@ transit_no_vend =
   filter(transit_df, vending == "NO")
 ```
 
-There are `r sum(transit_no_vend$entry == "YES")` stations without vending that allow entry, which is 0% of the stations.
+There are `r sum(transit_no_vend$entry == "TRUE")` stations without vending that allow entry of the `r nrow(transit_no_vend)` total stations without vending. So, `r round(69/183 * 100)`% of the stations without vending allow entry.
 
 ## Reformatting the transit data
 
