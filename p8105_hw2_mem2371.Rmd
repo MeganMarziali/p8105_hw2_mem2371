@@ -108,9 +108,17 @@ transit_df =
 
 The NYC transit subway dataset contains information regarding lines, station names and locations (specifically, latitude and longitude), routes, entry,  entrance types, vending and ADA compliance. To clean the dataset, I have dropped unnecessary variables, cleaned the column names, cleaned variable types to be consistent, and recoded the entry variable to logical vector. I have also indicated that blank cells in the excel sheet correspond to missing values. This dataset has `r nrow(transit_df)` rows and `r ncol(transit_df)` columns. The dataset is not tidy, because the route names should be transformed to rows in lieu of columns.
 
-## Specifics about the transit data
+## Questions about the transit data
 
-There are `r nrow(distinct(transit_df))` distinct stations included in this dataset. There are `r sum(transit_df$ada == "TRUE", na.rm = FALSE)` stations that are ADA compliant.
+The following code chunk is to create a data frame with distinct stations defined both by name and line.
+
+```{r}
+transit_distinct = 
+  transit_df %>% 
+  distinct(line, station_name, .keep_all = TRUE) 
+```
+
+There are `r nrow(transit_distinct)` distinct stations included in this dataset. There are `r sum(transit_distinct$ada == "TRUE", na.rm = FALSE)` of these distinct stations that are ADA compliant.
 
 The following code chunk restricts to only stations without vending.
 
@@ -136,7 +144,8 @@ transit_df_long =
   drop_na(route_num)
 
 transit_a = 
-  (distinct(transit_df_long)) %>% 
+  transit_df_long %>% 
+  distinct(line, station_name, .keep_all = TRUE) %>% 
   filter(route_num == "A")
 ```
 
