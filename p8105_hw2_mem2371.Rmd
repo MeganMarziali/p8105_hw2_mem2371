@@ -106,7 +106,7 @@ transit_df =
          route11 = as.character(route11))
 ```
 
-The NYC transit subway dataset contains information regarding lines, station names and locations (specifically, latitude and longitude), routes, entry,  entrance types, vending and ADA compliance. To clean the dataset, I have dropped unnecessary variables, cleaned the column names, cleaned variable types to be consistent, and recoded the entry variable to logical vector. I have also indicated that blank cells in the excel sheet correspond to missing values. This dataset has `r nrow(transit_df)` rows and `r ncol(transit_df)` columns. The dataset is not tidy, because the route names should be transformed to rows in lieu of columns.
+The NYC transit subway dataset contains information regarding lines, station names and locations (specifically, latitude and longitude), routes, entry,  entrance types, vending and ADA compliance. To clean the dataset, I have dropped unnecessary variables, cleaned the column names, cleaned variable types to be consistent, and recoded the entry variable to logical vector. I have also indicated that blank cells in the excel sheet correspond to missing values. This dataset has `r nrow(transit_df)` rows and `r ncol(transit_df)` columns. The dataset is not tidy, because the route names should be transformed to rows in lieu of columns (the dataset is in the wide format).
 
 ## Questions about the transit data
 
