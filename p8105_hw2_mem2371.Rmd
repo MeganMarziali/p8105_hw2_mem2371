@@ -168,22 +168,30 @@ The following code reads in and cleans the pols-month data.
 ```{r, message = FALSE}
 pols_month = 
   read_csv("./problem_3/fivethirtyeight_datasets/pols-month.csv") %>% 
+  janitor::clean_names() %>% 
   separate(
     mon,
     sep = "-",
-    into = c("year", "month", "day")) %>% 
+    into = c("year", "month_num", "day")) %>% 
   mutate(year = as.integer(year),
-         month = as.integer(month),
+         month_num = as.integer(month_num),
          president = 
            ifelse(prez_dem == 1, 
                   {president = "dem"}, 
                   {president = "gop"}))
 
+month_abb = 
+  tibble(
+    month_num = 1:12,
+    month = month.abb)
+
 pols_cleaned = 
-  left_join(pols_month, month_df, by = "month") %>% 
+  left_join(pols_month, month_abb, by = "month_num") %>% 
   select(-prez_gop, 
          -prez_dem, 
-         -day)
+         -day,
+         -month_num) %>% 
+  relocate(year, month)
 ```
 
 This code chunk reads in and cleans the snp dataset.
@@ -191,17 +199,20 @@ This code chunk reads in and cleans the snp dataset.
 ```{r, message=FALSE}
 snp_df = 
   read_csv("./problem_3/fivethirtyeight_datasets/snp.csv") %>% 
+  janitor::clean_names() %>% 
   separate(
     date,
     sep = "/",
-    into = c("month", "day", "year")) %>% 
+    into = c("month_num", "day", "year")) %>% 
   mutate(year = as.integer(year),
-         month = as.integer(month),
-         day = as.integer(day)) %>% 
-  relocate(year, month)
+         month_num = as.integer(month_num)) %>% 
+  relocate(year, month_num)
 
 snp_month = 
-  left_join(snp_df, month_df, by = "month") 
+  left_join(snp_df, month_abb, by = "month_num") %>% 
+  select(-month_num,
+         -day) %>% 
+  relocate(year, month)
 ```
 
 This code chunk reads in and cleans the unemployment dataset.
@@ -211,13 +222,12 @@ unemployment_df =
   read_csv("./problem_3/fivethirtyeight_datasets/unemployment.csv") %>% 
   pivot_longer(
     Jan:Dec,
-    names_to = "month_name",
+    names_to = "month",
     values_to = "unemployment") %>% 
   mutate(
-    month = match(month_name, month.abb),
     year = as.integer(Year)) %>% 
-  select(-Year) %>% 
-  relocate(year, month)
+  relocate(year, month) %>% 
+  select(-Year)
 ```
 
 ## Merging datasets
@@ -226,15 +236,15 @@ The following code merges snp into pols, and merging the result with unemploymen
 
 ```{r}
 pols_snp_merge = 
-  left_join(pols_cleaned, snp_month, by = c("year", "month", "month_name"))
+  left_join(pols_cleaned, snp_month, by = c("year", "month"))
 
 full_merge = 
-  left_join(pols_snp_merge, unemployment_df, by = c("year", "month", "month_name"))
+  left_join(pols_snp_merge, unemployment_df, by = c("year", "month"))
 ```
 
 ## Dataset descriptions
 
-The snp dataset relates to Standard & Poor's stock market index, and includes year, month, date and the values of the S&P stock market index at close. There are `r nrow(snp_df)` observations in the dataset, and `r ncol(snp_df)` columns. The yearly range from this dataset is from `r min(snp_df$year)` to `r max(snp_df$year)`.
+The snp dataset relates to Standard & Poor's stock market index, and includes year, month, date and the values of the S&P stock market index at close. There are `r nrow(snp_df)` rows in the dataset, and `r ncol(snp_df)` columns. The yearly range from this dataset is from `r min(snp_df$year)` to `r max(snp_df$year)`.
 
 The pols dataset contains information on the number of national politicians and their political affiliations. This dataset includes `r ncol(pols_cleaned)` columns: `r variable.names(pols_cleaned)`. There are `r nrow(pols_cleaned)` observations in this dataset. The yearly range from this dataset is from `r min(pols_cleaned$year)` to `r max(pols_cleaned$year)`.
 
