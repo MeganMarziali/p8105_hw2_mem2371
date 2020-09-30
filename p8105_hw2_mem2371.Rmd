@@ -124,7 +124,7 @@ There are `r nrow(transit_distinct)` distinct stations included in this dataset.
 
 #### ADA compliance
 
-There are `r sum(pull(transit_distinct, ada))` of the distinct stations that are ADA compliant. Of the total stations (not the distinct stations), there are `r sum(pull(transit_df, ada))` stations that are ADA compliant.
+`r sum(pull(transit_distinct, ada))` of the distinct stations are ADA compliant. Of the total stations (i.e. not the distinct stations), there are `r sum(pull(transit_df, ada))` stations that are ADA compliant.
 
 #### Entry without vending
 
